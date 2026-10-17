@@ -1,0 +1,89 @@
+# randollm
+
+LLMs can't be random. Ask one to "pick a number from 1 to 10" and you get 7 far too often. randollm gives the model a tool that does the randomness for it.
+
+Live at **https://randollm.glauser.com**:
+
+| Path          | What                                                             |
+| ------------- | ---------------------------------------------------------------- |
+| `/mcp`        | Remote MCP server (Streamable HTTP, stateless, no auth)          |
+| `/api/<tool>` | REST API: `GET` with query params or `POST` with a JSON body     |
+| `/api/verify` | `POST` a receipt to check its signature                          |
+| `/health`     | `{"ok":true}`                                                    |
+| everything else | Landing page and site files from `public/` (static assets)     |
+
+Results come from a cryptographically secure generator (`node:crypto`), and ranges use rejection sampling, so they're unbiased.
+
+## Tools
+
+| Tool       | Does                                       | Params                              |
+| ---------- | ------------------------------------------ | ----------------------------------- |
+| `int`      | Whole number in `[min, max]`               | `min=1`, `max=100`                  |
+| `float`    | Decimal in `[min, max)`                    | `min=0`, `max=1`                    |
+| `coin`     | heads / tails                              |                                     |
+| `pick`     | One option from a list                     | `options`                           |
+| `sample`   | `k` distinct options                       | `items`, `k`                        |
+| `shuffle`  | Random order                               | `items`                             |
+| `weighted` | One option, with relative weights          | `options`, `weights`                |
+| `dice`     | e.g. 2d6                                   | `count=1`, `sides=6`                |
+| `uuid`     | v4 UUID                                    |                                     |
+
+Every tool also takes an optional `seed`. With a seed, results come from a deterministic HMAC-SHA256 stream, so they can be reproduced, and they're marked `"source": "seeded"`. Without one, results can't be predicted.
+
+Every result is a receipt (`id`, `op`, `params`, `result`, `source`, `timestamp`). When `RANDOLLM_SECRET` is set, it also has a `signature`: an HMAC-SHA256 over the rest of the receipt.
+
+All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `openWorldHint: false`. Clients use these annotations, and the Claude and ChatGPT directories require them.
+
+## Code
+
+- [src/random.js](src/random.js): the randomness, receipts and signing. Every operation draws bytes from one `bytes(n)` source. To use a hardware RNG or a beacon like drand, swap `systemSource()`.
+- [src/tools.js](src/tools.js): MCP tool definitions and server instructions, shared by both servers.
+- [src/worker.js](src/worker.js): the Cloudflare Worker (`/mcp`, `/api/*`, `/health`).
+- [src/mcp.js](src/mcp.js): a local stdio MCP server with the same tools.
+- [public/](public/): the landing page, privacy page, 404, `llms.txt`, `robots.txt`, sitemap, and the share image and icons.
+
+## Local development
+
+```bash
+npm install
+```
+
+```bash
+npm run dev
+```
+
+This serves everything on http://localhost:3002 (port 3002 in infra's "Local ports" table). To sign results locally, copy `.env.example` to `.dev.vars` and set `RANDOLLM_SECRET`.
+
+```bash
+npm test
+```
+
+The tests cover the randomness (including a chi-square check), both MCP servers through the real MCP client, and the REST API.
+
+To use the local stdio server from Claude Code:
+
+```bash
+claude mcp add randollm -- node /Users/oskarglauser/Sites/randollm/src/mcp.js
+```
+
+## Deploy
+
+Hosting is a Cloudflare Worker with static assets. Workers Builds deploys every push to `main`, and other branches get a noindex Preview URL.
+
+This is an exception to [INFRA.md](../infra/INFRA.md). It isn't an App, so there's no Dockerfile, Coolify or Postgres, but unlike a static site it runs code. It's stateless (no database, no sessions, nothing stored), so a Worker costs nothing, stays up when the VPS is down and keeps traffic off the VPS.
+
+One-time setup:
+
+1. Push the repo to GitHub.
+2. In Cloudflare, go to **Workers & Pages → Create → Import a repository** and pick `randollm`. Keep the default commands: no build command, and `npx wrangler deploy` as the deploy command.
+3. Under **Worker → Settings → Domains & Routes**, add the custom domain `randollm.glauser.com`.
+4. Under **Worker → Settings → Variables and Secrets**, add a secret `RANDOLLM_SECRET`, generated with `openssl rand -base64 32`.
+5. Turn on Cloudflare Web Analytics for the site. The privacy page says it's in use.
+6. Check that `https://randollm.glauser.com/health` returns `{"ok":true}`, then add the connector in Claude and in ChatGPT (developer mode) and call a tool.
+
+## Limits and cost
+
+- **Static files are free and unlimited.** Only `/mcp`, `/api/*` and `/health` run the Worker (`run_worker_first`), so page views don't use the request quota. The demos on the home page make one API request each.
+- **Workers Free plan:** 100,000 Worker requests a day, with no bill. Past the limit, requests fail with error 1027 until midnight UTC.
+- **Rate limits** (`ratelimits` in `wrangler.jsonc`): 60 requests a minute per IP on `/api/*` and 600 on `/mcp`. Claude and ChatGPT call remote MCP servers from shared IP ranges, so the `/mcp` limit is high on purpose. It only stops a single client from hammering the server. The limits are per Cloudflare location and approximate.
+- **CPU:** about 0.1–0.3 ms per MCP request (measured locally), well under the free plan's 10 ms limit.

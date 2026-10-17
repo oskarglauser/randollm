@@ -1,0 +1,41 @@
+# Runs on pushes to main and on pull requests. Workers Builds deploys main
+# regardless of this result, so check it went green after pushing.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A newer push to the same branch cancels the run still going, so quick
+# successive pushes don't use up Actions minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read # gitleaks lists a PR's commits
+
+jobs:
+  # One job, not two: GitHub rounds each job up to a whole minute.
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # gitleaks scans the pushed commits
+      # Free for personal GitHub accounts; an organization needs a
+      # GITLEAKS_LICENSE secret.
+      - uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_COMMENTS: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      # Bundles the Worker exactly as a deploy would, without deploying.
+      - run: npx wrangler deploy --dry-run --outdir dist

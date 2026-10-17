@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>randollm: real randomness for Claude, ChatGPT and other LLMs</title>
+<meta name="description" content="A free MCP server that gives Claude, ChatGPT, Cursor and other AI tools real randomness: numbers, coin flips, picks, shuffles and dice. No sign-up, no API key.">
+<link rel="canonical" href="https://randollm.glauser.com/">
+<meta name="theme-color" content="#f2ede3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13110e" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/ibm-plex-mono-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="randollm">
+<meta property="og:title" content="randollm: real randomness for LLMs">
+<meta property="og:description" content="Ask an AI to pick a number from 1 to 10 and it says 7. randollm gives it real dice: a free MCP server for Claude, ChatGPT and more.">
+<meta property="og:url" content="https://randollm.glauser.com/">
+<meta property="og:image" content="https://randollm.glauser.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="randollm: Ask an AI for a random number and it says 7.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="randollm: real randomness for LLMs">
+<meta name="twitter:description" content="Ask an AI to pick a number from 1 to 10 and it says 7. randollm gives it real dice.">
+<meta name="twitter:image" content="https://randollm.glauser.com/og.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "randollm",
+  "url": "https://randollm.glauser.com/",
+  "description": "A free MCP server and REST API that gives AI models real randomness: random numbers, coin flips, picks, shuffles, weighted choices, dice and UUIDs.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "isAccessibleForFree": true,
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "Oskar Glauser", "url": "https://www.glauser.com/" }
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="randollm home">rando<span>llm</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="#setup">Setup</a>
+      <a href="#tools">Tools</a>
+      <a class="optional" href="#api">API</a>
+      <a class="optional" href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow rise">Real randomness for LLMs</p>
+      <h1 class="rise">Ask an AI to pick a number from 1 to 10. It says <span class="seven">7.</span></h1>
+      <p class="lede rise">Language models can’t be random. They predict the likeliest answer, so their “random” picks repeat. randollm gives them real dice: a free MCP server for Claude, ChatGPT, Cursor and any other AI tool that supports MCP.</p>
+      <div class="rise">
+        <div class="copy-url">
+          <code id="mcp-url">https://randollm.glauser.com/mcp</code>
+          <button class="btn" type="button" data-copy="https://randollm.glauser.com/mcp">Copy</button>
+        </div>
+        <div class="hero-actions">
+          <a class="btn ghost" href="#setup">Set it up in 1 minute →</a>
+          <span>Free · no sign-up · no API key</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel rise" aria-label="Demo: pick a number from 1 to 10">
+      <div class="panel-head">
+        <span>Pick a number, 1–10</span>
+        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+      </div>
+      <div class="readouts">
+        <div class="readout model">
+          <div class="label">A model, guessing</div>
+          <div class="num" aria-hidden="true">7</div>
+          <div class="note">far too often</div>
+        </div>
+        <div class="readout real">
+          <div class="label">randollm</div>
+          <div class="num" id="roll-num" aria-live="polite">?</div>
+          <div class="note" id="roll-note">press roll</div>
+        </div>
+      </div>
+      <div class="panel-foot">
+        <span>GET /api/int?min=1&amp;max=10</span>
+        <button class="btn" type="button" id="roll-btn">Roll</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Flat, the way <em>random</em> should be.</h2>
+      <p class="lede">Every bar should hover around the dashed line, 10% each. These are real results: 1,000 rolls of a ten-sided die from the same generator your model will use, fetched in one request.</p>
+    </div>
+    <div class="chart">
+      <div class="bars" id="bars" role="img" aria-label="Histogram of results from 1 to 10">
+        <div class="expected" style="bottom:50%"></div>
+        <div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div>
+        <div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div><div class="bar"><b></b></div>
+      </div>
+      <div class="axis" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+      <div class="chart-foot">
+        <div class="stats"><span class="legend">10% expected</span><span id="stats"><span>n = <b>0</b></span></span></div>
+        <button class="btn" type="button" id="draw-btn">Draw 1,000 more</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="setup">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Set it up <em>once.</em></h2>
+      <p class="lede">Add one URL to your AI tool. There’s no account and no key: it’s a public MCP server at <code>https://randollm.glauser.com/mcp</code>.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Choose your app" hidden>
+      <button role="tab" type="button" aria-controls="tab-claude" aria-selected="true">Claude</button>
+      <button role="tab" type="button" aria-controls="tab-claude-code" aria-selected="false">Claude Code</button>
+      <button role="tab" type="button" aria-controls="tab-chatgpt" aria-selected="false">ChatGPT</button>
+      <button role="tab" type="button" aria-controls="tab-cursor" aria-selected="false">Cursor</button>
+      <button role="tab" type="button" aria-controls="tab-vscode" aria-selected="false">VS Code</button>
+      <button role="tab" type="button" aria-controls="tab-other" aria-selected="false">Other</button>
+    </div>
+
+    <div class="tabpanel" id="tab-claude" role="tabpanel">
+      <h3>Claude (web, desktop and mobile)</h3>
+      <ol>
+        <li>Open Claude’s settings and go to <strong>Connectors</strong>.</li>
+        <li>Choose <strong>Add custom connector</strong>.</li>
+        <li>Name it <code>randollm</code>, paste <code>https://randollm.glauser.com/mcp</code> as the URL, and add it. It needs no sign-in.</li>
+      </ol>
+      <p class="muted">A connector you add on the web also works in the Claude desktop and mobile apps.</p>
+    </div>
+
+    <div class="tabpanel" id="tab-claude-code" role="tabpanel">
+      <h3>Claude Code</h3>
+      <pre><code>claude mcp add --transport http --scope user randollm https://randollm.glauser.com/mcp</code></pre>
+      <p class="muted"><code>--scope user</code> makes it available in every project.</p>
+    </div>
+
+    <div class="tabpanel" id="tab-chatgpt" role="tabpanel">
+      <h3>ChatGPT</h3>
+      <ol>
+        <li>In ChatGPT’s settings, open <strong>Apps</strong>, then the advanced settings, and turn on <strong>developer mode</strong>.</li>
+        <li>Create a new app with <code>https://randollm.glauser.com/mcp</code> as the MCP server URL and no authentication.</li>
+        <li>In a chat, choose randollm from the tools menu, or ask for something random.</li>
+      </ol>
+      <p class="muted">Developer mode is only needed until randollm is listed in ChatGPT’s app directory.</p>
+    </div>
+
+    <div class="tabpanel" id="tab-cursor" role="tabpanel">
+      <h3>Cursor</h3>
+      <p>Add this to <code>~/.cursor/mcp.json</code> (or <code>.cursor/mcp.json</code> in a project):</p>
+<pre><code>{
+  "mcpServers": {
+    "randollm": { "url": "https://randollm.glauser.com/mcp" }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tabpanel" id="tab-vscode" role="tabpanel">
+      <h3>VS Code</h3>
+      <p>Add this to <code>.vscode/mcp.json</code>, or run <strong>MCP: Add Server</strong> from the command palette:</p>
+<pre><code>{
+  "servers": {
+    "randollm": { "type": "http", "url": "https://randollm.glauser.com/mcp" }
+  }
+}</code></pre>
+    </div>
+
+    <div class="tabpanel" id="tab-other" role="tabpanel">
+      <h3>Anything else</h3>
+      <p>Any client that supports remote MCP servers (Streamable HTTP) can use <code>https://randollm.glauser.com/mcp</code> directly. For a client that only runs local servers, bridge it with <code>mcp-remote</code>:</p>
+<pre><code>{
+  "mcpServers": {
+    "randollm": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://randollm.glauser.com/mcp"]
+    }
+  }
+}</code></pre>
+      <p class="muted">Not using MCP? Call the <a href="#api">REST API</a> from your own function-calling tools.</p>
+    </div>
+
+    <div class="tip">
+      <p>The tools already tell the model never to fake randomness. To make it stick, add one line to your custom instructions, system prompt or <code>CLAUDE.md</code>:</p>
+      <blockquote>“Whenever you need anything random, use the randollm tools. Never pick yourself.”</blockquote>
+    </div>
+  </div>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Nine tools, <em>zero</em> guessing.</h2>
+      <p class="lede">You don’t call these yourself. Ask the way you normally would, and the model picks the right tool.</p>
+    </div>
+    <div class="tools">
+      <div class="tool"><code>int</code><p>A whole number between min and max.</p><p class="ask">Pick a number from 1 to 10.</p></div>
+      <div class="tool"><code>coin</code><p>Heads or tails.</p><p class="ask">Flip a coin: do I go out tonight?</p></div>
+      <div class="tool"><code>pick</code><p>One option from a list.</p><p class="ask">Pizza, sushi or tacos? You choose.</p></div>
+      <div class="tool"><code>sample</code><p>Several different options, no repeats.</p><p class="ask">Pick 3 winners from these 40 names.</p></div>
+      <div class="tool"><code>shuffle</code><p>A list in random order.</p><p class="ask">Shuffle the speaking order for standup.</p></div>
+      <div class="tool"><code>weighted</code><p>One option, some more likely than others.</p><p class="ask">Pick a reward: 70% common, 25% rare, 5% epic.</p></div>
+      <div class="tool"><code>dice</code><p>Any dice, with each roll and the total.</p><p class="ask">Roll 2d6 for my attack.</p></div>
+      <div class="tool"><code>float</code><p>A decimal number in a range.</p><p class="ask">Give me a random temperature between 0.2 and 0.9.</p></div>
+      <div class="tool"><code>uuid</code><p>A random version-4 UUID.</p><p class="ask">Generate an ID for this record.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="api">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Or call it <em>directly.</em></h2>
+      <p class="lede">The same tools are a plain REST API at <code>/api/&lt;tool&gt;</code>: <code>GET</code> with query parameters or <code>POST</code> with JSON. It’s limited to 60 requests a minute per IP.</p>
+    </div>
+    <div class="api-grid">
+      <figure>
+<pre><code>curl 'https://randollm.glauser.com/api/int?min=1&amp;max=10'</code></pre>
+        <figcaption>A number from 1 to 10.</figcaption>
+      </figure>
+      <figure>
+<pre><code>curl https://randollm.glauser.com/api/pick \
+  -H 'content-type: application/json' \
+  -d '{"options":["pizza","sushi","tacos"]}'</code></pre>
+        <figcaption>One option from a list.</figcaption>
+      </figure>
+      <figure>
+<pre><code>{
+  "id": "5d0fb938-34b2-4b18-ada8-794b60fca725",
+  "op": "pick",
+  "params": { "options": ["pizza", "sushi", "tacos"] },
+  "result": "sushi",
+  "source": "system",
+  "timestamp": "2026-10-17T21:33:27.321Z",
+  "signature": "9f2c…"
+}</code></pre>
+        <figcaption>Every result is a receipt. <code>source</code> is <code>system</code> for real randomness, or <code>seeded</code> when you passed a seed.</figcaption>
+      </figure>
+      <figure>
+<pre><code>curl https://randollm.glauser.com/api/verify \
+  -H 'content-type: application/json' \
+  -d @receipt.json
+# {"valid":true}</code></pre>
+        <figcaption>Check that a receipt is untouched. The signature covers every field.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Questions.</h2>
+    </div>
+    <div>
+      <details>
+        <summary>Why can’t the model just be random?</summary>
+        <div class="answer">
+          <p>A language model writes the most likely next word given everything before it. Asked for a random number, it produces a number that <em>looks</em> random to it, and the same few answers come up again and again. Ask it to shuffle a list or pick a winner and you get the same bias, only harder to spot.</p>
+        </div>
+      </details>
+      <details>
+        <summary>How random is it, really?</summary>
+        <div class="answer">
+          <p>Results come from a cryptographically secure random generator, the same kind used to make encryption keys. Ranges use rejection sampling, so no number is ever slightly more likely than another, and shuffles use Fisher–Yates.</p>
+          <p>Every tool also takes an optional <code>seed</code>. With a seed, the same input always gives the same output, which is useful for tests and replays. Those results are marked <code>"source": "seeded"</code>, and the model is told to leave the seed out unless you ask for one.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What does it cost?</summary>
+        <div class="answer">
+          <p>Nothing. There’s no account, no key and no cookies. It runs on Cloudflare Workers, where each call is tiny.</p>
+        </div>
+      </details>
+      <details>
+        <summary>What do you store?</summary>
+        <div class="answer">
+          <p>Nothing about your requests is saved. What you send (a list of options, say) is used to compute the result and then discarded. Cloudflare keeps short-lived operational logs to keep the service running. Details are in the <a href="/privacy">privacy policy</a>.</p>
+        </div>
+      </details>
+      <details>
+        <summary>Can I run it myself?</summary>
+        <div class="answer">
+          <p>Yes. The same tools also run as a local MCP server over stdio, with no network access at all.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>randollm · made by <a href="https://www.glauser.com/">Oskar Glauser</a></span>
+    <nav aria-label="Footer">
+      <a href="/privacy">Privacy</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/health">Status</a>
+    </nav>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const toast = (msg) => {
+    const t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._h);
+    t._h = setTimeout(() => t.classList.remove("show"), 1800);
+  };
+  const api = async (path) => {
+    const res = await fetch(path, { headers: { accept: "application/json" } });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(res.status === 429 ? "Rate limited. Try again in a minute." : body.error || "Request failed");
+    return body;
+  };
+
+  // Copy buttons.
+  document.querySelectorAll("[data-copy]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.copy);
+        toast("Copied the MCP URL");
+      } catch {
+        toast("Select the URL and copy it");
+      }
+    });
+  });
+
+  // Hero roll. The flicker cycles 1..10 in order; only the server picks.
+  const num = $("#roll-num"), note = $("#roll-note"), rollBtn = $("#roll-btn");
+  async function roll() {
+    rollBtn.disabled = true;
+    num.classList.add("rolling");
+    let i = 0;
+    const tick = setInterval(() => (num.textContent = (i++ % 10) + 1), 45);
+    const wait = new Promise((r) => setTimeout(r, 420));
+    try {
+      const [res] = await Promise.all([api("/api/int?min=1&max=10"), wait]);
+      clearInterval(tick);
+      num.textContent = res.result;
+      note.textContent = res.result === 7 ? "yes, 7 happens too (10%)" : "1 in 10, every time";
+    } catch (err) {
+      clearInterval(tick);
+      num.textContent = "?";
+      note.textContent = err.message;
+    } finally {
+      num.classList.remove("rolling");
+      rollBtn.disabled = false;
+    }
+  }
+  rollBtn.addEventListener("click", roll);
+  roll();
+
+  // Histogram: 1,000 rolls of a d10 per request, accumulated.
+  const counts = new Array(10).fill(0);
+  const bars = [...document.querySelectorAll("#bars .bar")];
+  const drawBtn = $("#draw-btn"), stats = $("#stats");
+  function render() {
+    const n = counts.reduce((a, b) => a + b, 0);
+    bars.forEach((bar, k) => {
+      const share = n ? counts[k] / n : 0;
+      bar.style.height = Math.min(100, (share / 0.2) * 100) + "%";
+      bar.querySelector("b").textContent = n ? (share * 100).toFixed(1) + "%" : "";
+    });
+    if (!n) return;
+    const exp = n / 10;
+    const chi2 = counts.reduce((s, c) => s + (c - exp) ** 2 / exp, 0);
+    stats.innerHTML =
+      `<span>n = <b>${n.toLocaleString("en")}</b></span>` +
+      `<span>min <b>${Math.min(...counts)}</b> · max <b>${Math.max(...counts)}</b></span>` +
+      `<span>χ² <b>${chi2.toFixed(1)}</b> <span title="Below about 16.9 is what fair dice look like 95% of the time">(fair &lt; 16.9)</span></span>`;
+  }
+  async function draw() {
+    drawBtn.disabled = true;
+    try {
+      const res = await api("/api/dice?count=1000&sides=10");
+      res.result.rolls.forEach((r) => counts[r - 1]++);
+      render();
+    } catch (err) {
+      toast(err.message);
+    } finally {
+      drawBtn.disabled = false;
+    }
+  }
+  drawBtn.addEventListener("click", draw);
+  const io = "IntersectionObserver" in window && new IntersectionObserver((entries) => {
+    if (entries.some((e) => e.isIntersecting)) {
+      io.disconnect();
+      draw();
+    }
+  }, { threshold: 0.3 });
+  io ? io.observe($("#bars")) : draw();
+
+  // Setup tabs. Without JS every panel is visible.
+  const tablist = document.querySelector('[role="tablist"]');
+  const tabs = [...tablist.querySelectorAll('[role="tab"]')];
+  const panels = tabs.map((t) => document.getElementById(t.getAttribute("aria-controls")));
+  function select(i, focus) {
+    tabs.forEach((t, k) => {
+      const on = k === i;
+      t.setAttribute("aria-selected", on);
+      t.tabIndex = on ? 0 : -1;
+      panels[k].hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+  }
+  tabs.forEach((t, i) => {
+    t.id = "t-" + t.getAttribute("aria-controls");
+    panels[i].setAttribute("aria-labelledby", t.id);
+    t.addEventListener("click", () => select(i));
+    t.addEventListener("keydown", (e) => {
+      const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+      if (d) select((i + d + tabs.length) % tabs.length, true);
+    });
+  });
+  tablist.hidden = false;
+  document.getElementById("setup").classList.add("tabs-ready");
+  select(0);
+})();
+</script>
+</body>
+</html>

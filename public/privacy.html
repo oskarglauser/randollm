@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy policy · randollm</title>
+<meta name="description" content="What randollm processes when you or your AI tool call it, and what it keeps: no accounts, no cookies, no stored requests.">
+<link rel="canonical" href="https://randollm.glauser.com/privacy">
+<meta name="theme-color" content="#f2ede3" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13110e" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="randollm">
+<meta property="og:title" content="Privacy policy · randollm">
+<meta property="og:description" content="What randollm processes when you or your AI tool call it, and what it keeps: no accounts, no cookies, no stored requests.">
+<meta property="og:image" content="https://randollm.glauser.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="randollm home">rando<span>llm</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/#setup">Setup</a>
+      <a href="/#tools">Tools</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="prose">
+  <div class="wrap">
+    <p class="eyebrow">Last updated 17 October 2026</p>
+    <h1>Privacy</h1>
+    <p>randollm is a free service that returns random results to AI tools and to people calling its API. It’s built to know as little as possible about you.</p>
+
+    <h2>What randollm receives</h2>
+    <p>When your AI tool or your code calls randollm, it sends the tool name and its inputs, for example the range of a number or the list of options to choose from. randollm uses these to compute the result and returns it. <strong>Inputs and results are not stored.</strong></p>
+    <p>There are no accounts, no API keys and no cookies. randollm doesn’t know who you are, and it never sees your conversation, only what the model sends to a tool.</p>
+
+    <h2>Technical data and logs</h2>
+    <p>randollm runs on Cloudflare Workers. Like any website, each request carries technical data such as your IP address, the time, the address requested and the name of your browser or AI client. randollm uses the IP address only in memory, to limit how many requests one client can make per minute.</p>
+    <p>Cloudflare keeps short-lived operational logs (request time, path, response status and similar) so problems can be found and fixed. They are kept for up to 7 days, then deleted automatically. Cloudflare’s own handling of this data is described in <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare’s privacy policy</a>.</p>
+
+    <h2>This website</h2>
+    <p>This site uses Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites. The demos on the home page call the same API described above.</p>
+
+    <h2>Signed receipts</h2>
+    <p>Results can include a signature so that anyone can check a result wasn’t changed later. The signature is computed from the result itself. Nothing is stored to make this work.</p>
+
+    <h2>Sharing</h2>
+    <p>randollm doesn’t sell or share data with anyone. The only other party involved is Cloudflare, as the hosting provider.</p>
+
+    <h2>Contact and changes</h2>
+    <p>randollm is run by Oskar Glauser. For questions, use the contact details on <a href="https://www.glauser.com/">glauser.com</a>. If this policy changes, the date at the top changes too.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>randollm · made by <a href="https://www.glauser.com/">Oskar Glauser</a></span>
+    <nav aria-label="Footer">
+      <a href="/privacy">Privacy</a>
+      <a href="/llms.txt">llms.txt</a>
+      <a href="/health">Status</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,24 @@
+# randollm
+
+> Real randomness for LLMs. A free, public MCP server (and REST API) that gives AI models a tool for anything random (numbers, coin flips, picks from a list, shuffles, samples, weighted choices, dice and UUIDs), because language models can't produce real randomness themselves. No sign-up or API key.
+
+- MCP server (Streamable HTTP, no auth): https://randollm.glauser.com/mcp
+- REST API: `GET` or `POST` https://randollm.glauser.com/api/<tool>, e.g. `/api/int?min=1&max=10`
+- Results come from a cryptographically secure generator; ranges use rejection sampling (unbiased). An optional `seed` makes results reproducible and marks them `"source": "seeded"`.
+
+## Tools
+
+- `int` (min, max): whole number, both ends inclusive
+- `float` (min, max): decimal in [min, max)
+- `coin`: heads or tails
+- `pick` (options): one option from a list
+- `sample` (items, k): k distinct items
+- `shuffle` (items): random order
+- `weighted` (options, weights): one option with relative weights
+- `dice` (count, sides): each roll and the total
+- `uuid`: random v4 UUID
+
+## Pages
+
+- [Home and setup](https://randollm.glauser.com/): what it is, a live demo, setup for Claude, Claude Code, ChatGPT, Cursor and VS Code, and the API
+- [Privacy](https://randollm.glauser.com/privacy): inputs and results aren't stored; no accounts or cookies
