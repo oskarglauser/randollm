@@ -157,11 +157,14 @@ a:hover {
   height: 60px;
 }
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   font: italic 400 28px/1 var(--serif);
   text-decoration: none;
   letter-spacing: -0.01em;
 }
-.wordmark span {
+.wordmark .name span {
   color: var(--signal);
 }
 .site-nav {
@@ -552,6 +555,26 @@ pre {
 .die .mr { grid-area: 2 / 3; }
 .die .bl { grid-area: 3 / 1; }
 .die .br { grid-area: 3 / 3; }
+/* The small one next to the name in the header. */
+.die.die-mini {
+  --s: 22px;
+  position: relative;
+  top: auto;
+  right: auto;
+  flex: none;
+  cursor: inherit;
+  perspective: 200px;
+}
+.die.die-mini::after {
+  display: none;
+}
+.die-mini .face {
+  padding: 11%;
+}
+.die-mini .face i {
+  width: 78%;
+}
+
 /* Opposite faces add up to 7. */
 .die .f1 { transform: translateZ(var(--h)); }
 .die .f6 { transform: rotateY(180deg) translateZ(var(--h)); }
@@ -566,6 +589,14 @@ pre {
   }
   .die:hover .tumble {
     animation-duration: 12s;
+  }
+  /* Out of step with the big die, and a little faster. */
+  .die-mini .tumble {
+    animation-duration: 24s;
+    animation-delay: -9s;
+  }
+  .wordmark:hover .die-mini .tumble {
+    animation-duration: 6s;
   }
   @keyframes tumble {
     from {
