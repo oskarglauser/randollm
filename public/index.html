@@ -78,10 +78,23 @@
       </div>
     </div>
 
-    <div class="panel rise" aria-label="Demo: pick a number from 1 to 10">
+    <div class="panel-wrap rise">
+      <button class="die" type="button" id="die" aria-label="Roll a new number">
+        <span class="tumble">
+          <span class="cube">
+            <span class="core cx"></span><span class="core cy"></span><span class="core cz"></span>
+            <span class="face f1"><i class="c"></i></span>
+            <span class="face f2"><i class="tl"></i><i class="br"></i></span>
+            <span class="face f3"><i class="tl"></i><i class="c"></i><i class="br"></i></span>
+            <span class="face f4"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></span>
+            <span class="face f5"><i class="tl"></i><i class="tr"></i><i class="c"></i><i class="bl"></i><i class="br"></i></span>
+            <span class="face f6"><i class="tl"></i><i class="tr"></i><i class="ml"></i><i class="mr"></i><i class="bl"></i><i class="br"></i></span>
+          </span>
+        </span>
+      </button>
+    <div class="panel" aria-label="Demo: pick a number from 1 to 10">
       <div class="panel-head">
         <span>Pick a number, 1–10</span>
-        <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
       </div>
       <div class="readouts">
         <div class="readout model">
@@ -99,6 +112,7 @@
         <span>GET /api/int?min=1&amp;max=10</span>
         <button class="btn" type="button" id="roll-btn">Roll</button>
       </div>
+    </div>
     </div>
   </div>
 </section>
@@ -375,6 +389,15 @@
     }
   }
   rollBtn.addEventListener("click", roll);
+
+  // The die spins a full turn per click, on top of its slow tumble.
+  const cube = document.querySelector("#die .cube");
+  let spins = 0;
+  $("#die").addEventListener("click", () => {
+    spins++;
+    cube.style.transform = `rotateX(${spins * 360}deg) rotateY(${spins * 360}deg)`;
+    if (!rollBtn.disabled) roll();
+  });
   roll();
 
   // Histogram: 1,000 rolls of a d10 per request, accumulated.

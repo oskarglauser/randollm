@@ -406,20 +406,6 @@ pre {
   border-bottom: 1px solid var(--ink);
   background: var(--paper-2);
 }
-.panel-head .lights {
-  display: flex;
-  gap: 5px;
-}
-.panel-head .lights i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: 1px solid var(--ink);
-}
-.panel-head .lights i:first-child {
-  background: var(--signal);
-  border-color: var(--signal);
-}
 .readouts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -469,6 +455,133 @@ pre {
   color: var(--ink-2);
 }
 
+/* The die: a CSS 3D cube that tumbles slowly on the panel's corner. */
+.panel-wrap {
+  position: relative;
+}
+.die {
+  --s: 64px;
+  --h: calc(var(--s) / 2);
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--s) * -0.62);
+  right: 14px;
+  width: var(--s);
+  height: var(--s);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  perspective: 520px;
+  -webkit-tap-highlight-color: transparent;
+}
+@media (min-width: 900px) {
+  .die {
+    --s: 84px;
+    right: 22px;
+  }
+}
+/* Soft shadow on the panel below the die. */
+.die::after {
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: -18%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(0 0 0 / 0.28), transparent);
+  filter: blur(2px);
+  z-index: -1;
+}
+.die:focus-visible {
+  outline-offset: 10px;
+  border-radius: 12px;
+}
+.die .tumble,
+.die .cube {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.die .tumble {
+  transform: rotateX(-24deg) rotateY(36deg);
+}
+.die .cube {
+  transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.die .face,
+.die .core {
+  position: absolute;
+  inset: 0;
+}
+/* Three dark planes through the middle fill the gaps at the rounded corners. */
+.die .core {
+  background: #7d1208;
+}
+.die .cx {
+  transform: rotateY(90deg);
+}
+.die .cy {
+  transform: rotateX(90deg);
+}
+.die .face {
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  padding: 13%;
+  border-radius: 20%;
+  background:
+    radial-gradient(circle at 28% 22%, rgb(255 255 255 / 0.32), transparent 45%),
+    linear-gradient(145deg, #f2462b 0%, #d32a14 55%, #a8190a 100%);
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.12),
+    inset 0 calc(var(--s) * -0.06) calc(var(--s) * 0.12) rgb(90 6 0 / 0.45);
+}
+.die .face i {
+  width: 72%;
+  aspect-ratio: 1;
+  place-self: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fffaf4, #f0ddd0 70%);
+  box-shadow: inset 0 calc(var(--s) * 0.02) calc(var(--s) * 0.03) rgb(60 0 0 / 0.55);
+}
+.die .tl { grid-area: 1 / 1; }
+.die .tr { grid-area: 1 / 3; }
+.die .ml { grid-area: 2 / 1; }
+.die .c { grid-area: 2 / 2; }
+.die .mr { grid-area: 2 / 3; }
+.die .bl { grid-area: 3 / 1; }
+.die .br { grid-area: 3 / 3; }
+/* Opposite faces add up to 7. */
+.die .f1 { transform: translateZ(var(--h)); }
+.die .f6 { transform: rotateY(180deg) translateZ(var(--h)); }
+.die .f2 { transform: rotateY(90deg) translateZ(var(--h)); }
+.die .f5 { transform: rotateY(-90deg) translateZ(var(--h)); }
+.die .f3 { transform: rotateX(90deg) translateZ(var(--h)); }
+.die .f4 { transform: rotateX(-90deg) translateZ(var(--h)); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .die .tumble {
+    animation: tumble 32s linear infinite;
+  }
+  .die:hover .tumble {
+    animation-duration: 12s;
+  }
+  @keyframes tumble {
+    from {
+      transform: rotateX(-24deg) rotateY(36deg) rotateZ(0deg);
+    }
+    to {
+      transform: rotateX(336deg) rotateY(396deg) rotateZ(360deg);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .die .cube {
+    transition: none;
+  }
+}
+
 /* Load-in. */
 @media (prefers-reduced-motion: no-preference) {
   .rise {
@@ -483,7 +596,7 @@ pre {
   .rise:nth-child(4) {
     animation-delay: 0.24s;
   }
-  .hero .panel.rise {
+  .hero .panel-wrap.rise {
     animation-delay: 0.3s;
   }
   @keyframes rise {
