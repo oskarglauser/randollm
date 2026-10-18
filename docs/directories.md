@@ -72,8 +72,11 @@ Needs a Pro, Max, Team or Enterprise plan.
    a list of options) and stores no inputs or results. It counts tool calls
    anonymously (tool, channel, the client's reported name, country; no IP
    addresses), kept up to three months in Workers Analytics Engine.
-   Cloudflare keeps operational logs for up to 7 days. No conversation data,
-   no accounts, no cookies.
+   Appscope (run by Oskar Glauser) gets the website's page views and events
+   (`mcp_url_copied`, `setup_viewed`, `die_rolled`) and, from the Worker,
+   `mcp_connected` and `tool_called`, with no IP addresses, browser details
+   or visitor identifiers stored. Cloudflare keeps operational logs for up
+   to 7 days. No conversation data, no accounts, no cookies.
 6. **Use cases:** at least three example prompts. Use the five positive test
    cases in `chatgpt-plugin/plugin.json`. Nothing is needed before
    connecting. The connector reads only (it doesn't write data).
