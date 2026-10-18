@@ -2,8 +2,10 @@
 // Prints randollm usage from Workers Analytics Engine (see src/usage.js).
 //   npm run usage          last 7 days
 //   npm run usage -- 30    last 30 days
-// Needs CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN (Account Analytics: Read)
-// in the environment or in .env.
+// Uses your Wrangler login (`npx wrangler login`). To use an API token
+// instead, set CLOUDFLARE_API_TOKEN (needs Account Analytics: Read) and
+// CLOUDFLARE_ACCOUNT_ID in the environment or in .env.
+import { execFileSync } from "node:child_process";
 
 try {
   process.loadEnvFile(".env");
@@ -11,11 +13,19 @@ try {
   // No .env: use the environment as it is.
 }
 
-const { CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: token } = process.env;
+// Output is captured, never printed: it contains the token.
+const wrangler = (...args) =>
+  execFileSync("npx", ["wrangler", ...args], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
+
+let { CLOUDFLARE_ACCOUNT_ID: account, CLOUDFLARE_API_TOKEN: token } = process.env;
+try {
+  token ||= wrangler("auth", "token").split("\n").pop();
+  account ||= JSON.parse(wrangler("whoami", "--json")).accounts?.[0]?.id;
+} catch {
+  // Not logged in: handled below.
+}
 if (!account || !token) {
-  console.error(
-    "Set CLOUDFLARE_ACCOUNT_ID and CLOUDFLARE_API_TOKEN (a token with Account Analytics: Read) in .env.",
-  );
+  console.error("Run `npx wrangler login` first, or set CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in .env.");
   process.exit(1);
 }
 
