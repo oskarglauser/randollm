@@ -144,16 +144,15 @@ function contactShadow() {
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
 const easeOutBack = (t) => 1 + 2.2 * (t - 1) ** 3 + 1.2 * (t - 1) ** 2;
 
-// The resting pose shows `value` on the front, turned a little so the top and
-// side read as 3D.
-const TILT = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), 0.38).multiply(
-  new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), -0.52),
-);
+// Like a real die, the result is the face pointing up. The camera looks down
+// from above, so the top face is always the one you read; turning it a little
+// about the vertical shows two sides for depth.
+const UP = new Vector3(0, 1, 0);
 function restingPose(value, quarterTurns = 0) {
   const i = FACE_VALUES.indexOf(value);
-  const face = new Quaternion().setFromUnitVectors(FACE_NORMALS[i], new Vector3(0, 0, 1));
-  const spin = new Quaternion().setFromAxisAngle(new Vector3(0, 0, 1), (quarterTurns * Math.PI) / 2);
-  return TILT.clone().multiply(spin).multiply(face);
+  const face = new Quaternion().setFromUnitVectors(FACE_NORMALS[i], UP);
+  const yaw = new Quaternion().setFromAxisAngle(UP, 0.55 + (quarterTurns * Math.PI) / 2);
+  return yaw.multiply(face);
 }
 
 function randomAxis() {
@@ -180,8 +179,8 @@ export function mountDie(stage, { onResult, onError, still = false } = {}) {
   scene.environmentIntensity = 0.9;
 
   const camera = new PerspectiveCamera(28, 1, 0.1, 50);
-  camera.position.set(0, 1.1, 7.4);
-  camera.lookAt(0, -0.15, 0);
+  camera.position.set(0, 5.6, 4.4);
+  camera.lookAt(0, -0.25, 0);
 
   const anisotropy = renderer.capabilities.getMaxAnisotropy();
   const die = new Mesh(
