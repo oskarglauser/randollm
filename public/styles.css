@@ -274,7 +274,7 @@ section {
   transform: scale(0.97);
 }
 .btn.quiet {
-  background: color-mix(in srgb, var(--red) 11%, transparent);
+  background: color-mix(in srgb, var(--red) 13%, transparent);
   color: var(--red);
   font-weight: 600;
 }
@@ -412,12 +412,7 @@ section {
 .chart {
   max-width: 880px;
   margin: 0 auto;
-  padding: 36px 20px 20px;
-}
-@media (min-width: 720px) {
-  .chart {
-    padding: 48px 44px 28px;
-  }
+  padding-top: 28px;
 }
 .bars {
   position: relative;
@@ -437,8 +432,7 @@ section {
   position: absolute;
   left: 0;
   right: 0;
-  border-top: 1px dashed var(--ink-2);
-  opacity: 0.5;
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 30%, transparent);
   pointer-events: none;
 }
 .bar {
@@ -450,12 +444,16 @@ section {
 }
 .bar b {
   position: absolute;
-  bottom: 100%;
+  z-index: 1;
+  bottom: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
-  padding-bottom: 6px;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--surface-2);
   font-size: 11px;
   font-weight: 500;
+  line-height: 1.5;
   color: var(--ink-2);
   white-space: nowrap;
 }
@@ -463,8 +461,8 @@ section {
   display: grid;
   grid-template-columns: repeat(10, 1fr);
   gap: 6px;
-  padding-top: 12px;
-  border-top: 1px solid var(--hairline);
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
   text-align: center;
   font: 600 15px/1 var(--display);
   color: var(--ink-2);
@@ -497,7 +495,7 @@ section {
 .legend::before {
   content: "";
   width: 20px;
-  border-top: 1px dashed var(--ink-2);
+  border-top: 1px dashed color-mix(in srgb, var(--ink) 45%, transparent);
 }
 
 /* ---------- Setup ---------- */
@@ -576,10 +574,11 @@ section {
 
 .tools {
   list-style: none;
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
+  max-width: 980px;
   display: grid;
-  gap: 16px;
+  column-gap: 48px;
 }
 @media (min-width: 640px) {
   .tools {
@@ -592,17 +591,19 @@ section {
   }
 }
 .tools li {
-  padding: 26px 24px 28px;
+  padding: 22px 0 26px;
+  border-top: 1px solid var(--hairline);
   display: grid;
-  gap: 10px;
+  gap: 8px;
   align-content: start;
 }
 .tools code {
   justify-self: start;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--red);
-  background: color-mix(in srgb, var(--red) 10%, transparent);
+  background: none;
+  padding: 0;
 }
 .tools p {
   margin: 0;

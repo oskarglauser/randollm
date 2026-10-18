@@ -31,7 +31,7 @@
 </header>
 <main id="main" class="prose">
   <div class="wrap">
-    <p class="eyebrow">Last updated 17 October 2026</p>
+    <p class="eyebrow">Last updated 18 October 2026</p>
     <h1>Privacy</h1>
     <p>randollm is a free service that returns random results to AI tools and to people calling its API. It’s built to know as little as possible about you.</p>
 
@@ -42,6 +42,9 @@
     <h2>Technical data and logs</h2>
     <p>randollm runs on Cloudflare Workers. Like any website, each request carries technical data such as your IP address, the time, the address requested and the name of your browser or AI client. randollm uses the IP address only in memory, to limit how many requests one client can make per minute.</p>
     <p>Cloudflare keeps short-lived operational logs (request time, path, response status and similar) so problems can be found and fixed. They are kept for up to 7 days, then deleted automatically. Cloudflare’s own handling of this data is described in <a href="https://www.cloudflare.com/privacypolicy/">Cloudflare’s privacy policy</a>.</p>
+
+    <h2>Usage counts</h2>
+    <p>To see how randollm is used, it counts each tool call anonymously: which tool, whether it came through MCP, the API or this website, the name your AI app or API client reports about itself (for example its app name and version), and the country Cloudflare sees the request coming from. <strong>No IP addresses and no inputs or results are counted.</strong> These counts are kept in Cloudflare Workers Analytics Engine for up to three months.</p>
 
     <h2>This website</h2>
     <p>This site uses Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites. The demos on the home page call the same API described above.</p>

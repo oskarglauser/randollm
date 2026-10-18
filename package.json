@@ -7,7 +7,8 @@
     "build:site": "esbuild site/die.js --bundle --minify --format=esm --target=es2022 --outfile=public/assets/die.js --log-level=warning",
     "deploy": "wrangler deploy",
     "mcp": "node src/mcp.js",
-    "test": "node --test \"test/*.test.js\""
+    "test": "node --test \"test/*.test.js\"",
+    "usage": "node scripts/usage.mjs"
   },
   "keywords": [
     "mcp",
