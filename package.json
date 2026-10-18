@@ -9,7 +9,8 @@
     "mcp": "node src/mcp.js",
     "test": "node --test \"test/*.test.js\"",
     "plugin:zip": "rm -f dist/randollm-chatgpt.zip && mkdir -p dist && cd chatgpt-plugin && zip -rX ../dist/randollm-chatgpt.zip . -x '.*'",
-    "usage": "node scripts/usage.mjs"
+    "usage": "node scripts/usage.mjs",
+    "promo": "node promo/serve.mjs"
   },
   "keywords": [
     "mcp",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
+    "mediabunny": "^1.61.6",
     "three": "^0.186.1",
     "wrangler": "^4.151.1"
   },

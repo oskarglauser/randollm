@@ -21,7 +21,7 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 
 // BoxGeometry material order is +x, -x, +y, -y, +z, -z. Opposite faces add up to 7.
-const FACE_VALUES = [2, 5, 3, 4, 1, 6];
+export const FACE_VALUES = [2, 5, 3, 4, 1, 6];
 const FACE_NORMALS = [
   new Vector3(1, 0, 0),
   new Vector3(-1, 0, 0),
@@ -49,7 +49,7 @@ function canvas(draw) {
 }
 
 // Color, bump (pips are dimples) and roughness (glossy body, satin pips) per face.
-function faceMaterial(value, anisotropy) {
+export function faceMaterial(value, anisotropy) {
   const pips = PIPS[value].map(([x, y]) => [x * SIZE, y * SIZE]);
   const color = new CanvasTexture(
     canvas((g) => {
@@ -120,7 +120,7 @@ function faceMaterial(value, anisotropy) {
   });
 }
 
-function contactShadow() {
+export function contactShadow() {
   const tex = new CanvasTexture(
     canvas((g) => {
       const grad = g.createRadialGradient(SIZE / 2, SIZE / 2, 0, SIZE / 2, SIZE / 2, SIZE / 2);
@@ -148,7 +148,7 @@ const easeOutBack = (t) => 1 + 2.2 * (t - 1) ** 3 + 1.2 * (t - 1) ** 2;
 // from above, so the top face is always the one you read; turning it a little
 // about the vertical shows two sides for depth.
 const UP = new Vector3(0, 1, 0);
-function restingPose(value, quarterTurns = 0) {
+export function restingPose(value, quarterTurns = 0) {
   const i = FACE_VALUES.indexOf(value);
   const face = new Quaternion().setFromUnitVectors(FACE_NORMALS[i], UP);
   const yaw = new Quaternion().setFromAxisAngle(UP, 0.55 + (quarterTurns * Math.PI) / 2);

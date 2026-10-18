@@ -4,8 +4,22 @@
     {
       "name": "randollm",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["wrangler", "dev", "--port", "3002"],
+      "runtimeArgs": [
+        "wrangler",
+        "dev",
+        "--port",
+        "3002"
+      ],
       "port": 3002
+    },
+    {
+      "name": "promo",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "promo"
+      ],
+      "port": 3003
     }
   ]
 }

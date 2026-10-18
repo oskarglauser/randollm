@@ -96,7 +96,7 @@ Every tool call is counted anonymously in Workers Analytics Engine ([src/usage.j
 npm run usage
 ```
 
-This prints the last 7 days (`npm run usage -- 30` for 30). It needs `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` in `.env`. The token is a custom API token with **Account Analytics: Read**. Request totals and errors are also on the Worker's **Metrics** tab in Cloudflare, and the last 3 days of requests are under **Logs**.
+This prints the last 7 days (`npm run usage -- 30` for 30). It uses your Wrangler login (`npx wrangler login`), so there's nothing to set up. To use an API token instead, set `CLOUDFLARE_API_TOKEN` (with **Account Analytics: Read**) and `CLOUDFLARE_ACCOUNT_ID` in `.env`. Request totals and errors are also on the Worker's **Metrics** tab in Cloudflare, and the last 3 days of requests are under **Logs**.
 
 ## Limits and cost
 
