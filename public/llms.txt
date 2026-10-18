@@ -22,3 +22,5 @@
 
 - [Home and setup](https://randollm.glauser.com/): what it is, a live demo, setup for Claude, Claude Code, ChatGPT, Cursor and VS Code, and the API
 - [Privacy](https://randollm.glauser.com/privacy): inputs and results aren't stored; no accounts or cookies
+- [Terms](https://randollm.glauser.com/terms): free to use, fair use, no warranty
+- [Support](https://randollm.glauser.com/support): setup help, common problems and contact

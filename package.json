@@ -6,7 +6,8 @@
     "dev": "wrangler dev --port 3002",
     "deploy": "wrangler deploy",
     "mcp": "node src/mcp.js",
-    "test": "node --test"
+    "test": "node --test",
+    "plugin:zip": "rm -f dist/randollm-chatgpt.zip && mkdir -p dist && cd chatgpt-plugin && zip -rX ../dist/randollm-chatgpt.zip . -x '.*'"
   },
   "keywords": [],
   "author": "",

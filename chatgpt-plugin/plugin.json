@@ -1,0 +1,97 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "randollm",
+  "version": "1.0.0",
+  "description": "Real randomness for AI: random numbers, coin flips, picks from a list, samples, shuffles, weighted choices, dice and UUIDs from a cryptographically secure generator.",
+  "author": {
+    "name": "Oskar Glauser",
+    "url": "https://www.glauser.com/"
+  },
+  "homepage": "https://randollm.glauser.com/",
+  "keywords": [
+    "random",
+    "randomness",
+    "dice",
+    "coin flip",
+    "shuffle",
+    "uuid"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "randollm",
+        "shortDescription": "Real randomness for AI",
+        "longDescription": "Language models can't be random. Asked to pick a number from 1 to 10 or to shuffle a list, a model predicts the likeliest answer, so its \"random\" picks repeat and lean toward the same few results.\n\nrandollm gives ChatGPT tools that do the randomness for it: a whole number in a range, a decimal number, a coin flip, one option from a list, several different options, a shuffled list, a weighted choice, dice rolls such as 2d6, and random UUIDs. Results come from a cryptographically secure generator, and ranges use rejection sampling, so every outcome is equally likely.\n\nEvery result is a receipt with an ID, a timestamp and a signature, so a draw can be checked later at randollm.glauser.com/api/verify. For tests and replays, an optional seed makes results reproducible; those results are marked as seeded.\n\nThere's no account and no sign-in. randollm only receives the inputs of each tool call, such as the range or the list of options, and stores none of them.",
+        "developerName": "Oskar Glauser",
+        "category": "Productivity",
+        "websiteURL": "https://randollm.glauser.com/",
+        "supportURL": "https://randollm.glauser.com/support",
+        "privacyPolicyURL": "https://randollm.glauser.com/privacy",
+        "termsOfServiceURL": "https://randollm.glauser.com/terms",
+        "defaultPrompt": [
+          "Pick a random number from 1 to 10.",
+          "Flip a coin: should I go out tonight?",
+          "Shuffle the speaking order for standup: Ana, Ben, Chloe, Dev."
+        ],
+        "brandColor": "#ff6247",
+        "brandColorDark": "#ff6247",
+        "logo": "./assets/logo.png",
+        "composerIcon": "./assets/logo.png"
+      },
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Random whole number in a range",
+              "prompt": "Pick a random number between 1 and 10.",
+              "tools_triggered": "int",
+              "expected_behavior": "Calls int with min 1 and max 10 and reports the returned number, a whole number from 1 to 10."
+            },
+            {
+              "description": "Coin flip for a yes/no decision",
+              "prompt": "Flip a coin for me: heads I cook, tails we order in.",
+              "tools_triggered": "coin",
+              "expected_behavior": "Calls coin and reports the returned side (heads or tails) and what it means for the user's decision."
+            },
+            {
+              "description": "One option from a list",
+              "prompt": "Choose where we eat tonight: pizza, sushi or tacos.",
+              "tools_triggered": "pick",
+              "expected_behavior": "Calls pick with the options pizza, sushi and tacos and reports the one option returned."
+            },
+            {
+              "description": "Dice roll",
+              "prompt": "Roll 2d6 for my attack.",
+              "tools_triggered": "dice",
+              "expected_behavior": "Calls dice with count 2 and sides 6 and reports both rolls (each 1 to 6) and their total (2 to 12)."
+            },
+            {
+              "description": "Several distinct winners",
+              "prompt": "Pick 3 winners at random from: Ana, Ben, Chloe, Dev, Eli, Fay.",
+              "tools_triggered": "sample",
+              "expected_behavior": "Calls sample with the six names and k 3 and reports three different names from the list, as returned."
+            }
+          ],
+          "negative": [
+            {
+              "description": "A factual question with nothing random in it",
+              "prompt": "What is the capital of France?"
+            },
+            {
+              "description": "An explanation about randomness, not a random result",
+              "prompt": "Explain how a pseudorandom number generator works."
+            },
+            {
+              "description": "A creative request that doesn't need a random draw",
+              "prompt": "Write a four-line poem about rolling dice."
+            }
+          ]
+        }
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "First release: nine tools for random numbers, coin flips, picks, samples, shuffles, weighted choices, dice and UUIDs."
+      }
+    }
+  }
+}

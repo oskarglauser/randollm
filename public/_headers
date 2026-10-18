@@ -9,3 +9,13 @@
 
 /llms.txt
   Content-Type: text/plain; charset=utf-8
+
+# Verification tokens for the app directories (see docs/directories.md):
+# plain text, and never cached, so a new token works right away.
+/.well-known/openai-apps-challenge
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-store
+
+/.well-known/mcp-registry-auth
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: no-store
