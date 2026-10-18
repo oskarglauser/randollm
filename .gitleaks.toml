@@ -1,0 +1,8 @@
+# Gitleaks (the CI secret scan) with its default rules, plus one exception.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Appscope's publishable site key: public by design, it ships in every page's <script> tag"
+regexTarget = "line"
+regexes = ['''<script defer src="https://appscope\.glauser\.com/s\.js" data-key="pk_[A-Za-z0-9]+"></script>''']
