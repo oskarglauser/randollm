@@ -7,3 +7,5 @@ node_modules/
 .dev.vars.*
 .DS_Store
 dist/
+promo/dist/
+promo/out/
