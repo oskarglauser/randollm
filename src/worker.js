@@ -62,13 +62,13 @@ async function readParams(request, url) {
   return { ...params, ...body };
 }
 
-async function handleApi(request, url, env) {
+async function handleApi(request, url, env, ctx) {
   if (request.method !== "GET" && request.method !== "POST") return json(405, { error: "use GET or POST" });
   if (tooLarge(request)) return json(413, { error: "body too large" });
   if (await rateLimited(env.API_LIMITER, request)) return json(429, { error: "rate limit exceeded, try again in a minute" });
   const op = url.pathname.slice("/api/".length);
   if (op !== "verify" && !Object.hasOwn(operations, op)) return json(404, { error: `unknown operation: ${op}` });
-  recordApi(env, request, url, op);
+  recordApi(env, ctx, request, url, op);
   try {
     const params = await readParams(request, url);
     if (op === "verify") return json(200, { valid: verify(params, env.RANDOLLM_SECRET) });
@@ -79,7 +79,7 @@ async function handleApi(request, url, env) {
   }
 }
 
-async function handleMcp(request, url, env) {
+async function handleMcp(request, url, env, ctx) {
   // A person opening the MCP URL in a browser gets the setup instructions.
   const accept = request.headers.get("accept") ?? "";
   if (request.method === "GET" && accept.includes("text/html") && !accept.includes("text/event-stream")) {
@@ -88,7 +88,7 @@ async function handleMcp(request, url, env) {
   if (tooLarge(request)) return json(413, { error: "body too large" });
   if (await rateLimited(env.MCP_LIMITER, request)) return json(429, { error: "rate limit exceeded, try again in a minute" });
 
-  await recordMcp(env, request);
+  await recordMcp(env, ctx, request);
 
   // Stateless: a fresh server and transport per request, no sessions to store.
   const server = createServer({
@@ -105,7 +105,7 @@ async function handleMcp(request, url, env) {
 }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const { pathname } = url;
     const isApi = pathname.startsWith("/api/");
@@ -114,8 +114,8 @@ export default {
     try {
       if (request.method === "OPTIONS" && (isApi || isMcp)) return withHeaders(new Response(null, { status: 204 }));
       if (pathname === "/health") return json(200, { ok: true });
-      if (isMcp) return await handleMcp(request, url, env);
-      if (isApi) return await handleApi(request, url, env);
+      if (isMcp) return await handleMcp(request, url, env, ctx);
+      if (isApi) return await handleApi(request, url, env, ctx);
       return env.ASSETS ? env.ASSETS.fetch(request) : json(404, { error: "not found" });
     } catch (err) {
       console.error(err);

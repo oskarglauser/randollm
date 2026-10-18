@@ -330,6 +330,7 @@ if (stage) {
     still: stage.hasAttribute("data-still"),
     onResult(v) {
       result.textContent = `You rolled a ${v}.`;
+      window.appscope?.track("die_rolled", { value: v });
     },
     onError(msg) {
       result.textContent = msg;

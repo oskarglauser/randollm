@@ -43,6 +43,7 @@
   "author": { "@type": "Person", "name": "Oskar Glauser", "url": "https://www.glauser.com/" }
 }
 </script>
+<script defer src="https://appscope.glauser.com/s.js" data-key="pk_mWXcdBLPQYs6EWYOKfpO"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -224,6 +225,8 @@
 <script>
 (() => {
   const $ = (s) => document.querySelector(s);
+  // Appscope analytics (loaded in <head>); a no-op until it has loaded.
+  const track = (name, props) => window.appscope?.track(name, props);
   const toast = (msg) => {
     const t = $("#toast");
     t.textContent = msg;
@@ -237,6 +240,7 @@
       try {
         await navigator.clipboard.writeText(btn.dataset.copy);
         toast("Copied");
+        track("mcp_url_copied");
       } catch {
         toast("Select the URL and copy it");
       }
@@ -295,7 +299,10 @@
   tabs.forEach((t, i) => {
     t.id = "t-" + t.getAttribute("aria-controls");
     panels[i].setAttribute("aria-labelledby", t.id);
-    t.addEventListener("click", () => select(i));
+    t.addEventListener("click", () => {
+      select(i);
+      track("setup_viewed", { app: t.textContent.trim().toLowerCase() });
+    });
     t.addEventListener("keydown", (e) => {
       const d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
       if (d) select((i + d + tabs.length) % tabs.length, true);
