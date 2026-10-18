@@ -88,6 +88,16 @@ One-time setup:
 5. Turn on Cloudflare Web Analytics for the site. The privacy page says it's in use.
 6. Check that `https://randollm.glauser.com/health` returns `{"ok":true}`, then add the connector in Claude and in ChatGPT (developer mode) and call a tool.
 
+## Usage stats
+
+Every tool call is counted anonymously in Workers Analytics Engine ([src/usage.js](src/usage.js)): the tool, the channel (`mcp`, `api`, or `site` for the landing page's own demos), the client's reported name or user agent, and the country. No IP addresses and no inputs or results are recorded. MCP clients are also counted when they connect, which shows which apps use randollm.
+
+```bash
+npm run usage
+```
+
+This prints the last 7 days (`npm run usage -- 30` for 30). It needs `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` in `.env`. The token is a custom API token with **Account Analytics: Read**. Request totals and errors are also on the Worker's **Metrics** tab in Cloudflare, and the last 3 days of requests are under **Logs**.
+
 ## Limits and cost
 
 - **Static files are free and unlimited.** Only `/mcp`, `/api/*` and `/health` run the Worker (`run_worker_first`), so page views don't use the request quota. The demos on the home page make one API request each.

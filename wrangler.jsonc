@@ -26,6 +26,8 @@
     { "name": "API_LIMITER", "namespace_id": "4201", "simple": { "limit": 60, "period": 60 } },
     { "name": "MCP_LIMITER", "namespace_id": "4202", "simple": { "limit": 600, "period": 60 } }
   ],
+  // Anonymous usage counts (see src/usage.js); query with scripts/usage.mjs.
+  "analytics_engine_datasets": [{ "binding": "USAGE", "dataset": "randollm_usage" }],
   "observability": { "enabled": true },
   // Served on randollm.glauser.com: a custom domain attached to this Worker in
   // Cloudflare (not declared here, so builds don't need permission to manage

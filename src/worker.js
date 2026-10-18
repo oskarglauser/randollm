@@ -5,6 +5,7 @@ import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/
 import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/sdk/validation/cfworker";
 import { createServer } from "./tools.js";
 import { operations, run, verify, RandomError } from "./random.js";
+import { recordApi, recordMcp } from "./usage.js";
 
 const MAX_BODY = 64 * 1024;
 
@@ -67,6 +68,7 @@ async function handleApi(request, url, env) {
   if (await rateLimited(env.API_LIMITER, request)) return json(429, { error: "rate limit exceeded, try again in a minute" });
   const op = url.pathname.slice("/api/".length);
   if (op !== "verify" && !Object.hasOwn(operations, op)) return json(404, { error: `unknown operation: ${op}` });
+  recordApi(env, request, url, op);
   try {
     const params = await readParams(request, url);
     if (op === "verify") return json(200, { valid: verify(params, env.RANDOLLM_SECRET) });
@@ -85,6 +87,8 @@ async function handleMcp(request, url, env) {
   }
   if (tooLarge(request)) return json(413, { error: "body too large" });
   if (await rateLimited(env.MCP_LIMITER, request)) return json(429, { error: "rate limit exceeded, try again in a minute" });
+
+  await recordMcp(env, request);
 
   // Stateless: a fresh server and transport per request, no sessions to store.
   const server = createServer({
