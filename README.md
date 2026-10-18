@@ -32,7 +32,7 @@ Every tool also takes an optional `seed`. With a seed, results come from a deter
 
 Every result is a receipt (`id`, `op`, `params`, `result`, `source`, `timestamp`). When `RANDOLLM_SECRET` is set, it also has a `signature`: an HMAC-SHA256 over the rest of the receipt.
 
-All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `openWorldHint: false`. Clients use these annotations, and the Claude and ChatGPT directories require them.
+All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `openWorldHint: false`. Clients use these annotations, and the Claude and ChatGPT directories require them. Results come back both as JSON text and as `structuredContent`.
 
 ## Code
 
@@ -40,8 +40,14 @@ All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `open
 - [src/tools.js](src/tools.js): MCP tool definitions and server instructions, shared by both servers.
 - [src/worker.js](src/worker.js): the Cloudflare Worker (`/mcp`, `/api/*`, `/health`).
 - [src/mcp.js](src/mcp.js): a local stdio MCP server with the same tools.
-- [public/](public/): the landing page, privacy page, 404, `llms.txt`, `robots.txt`, sitemap, and the share image and icons.
+- [public/](public/): the landing page, privacy, terms and support pages, 404, `llms.txt`, `robots.txt`, sitemap, and the share image and icons. `icon.png` (512×512) is rendered from `icon.svg`.
 - [site/die.js](site/die.js): the 3D die on the landing page (three.js). Tapping it rolls a real `/api/dice` result. Run `npm run build:site` to bundle it into `public/assets/die.js`, and commit both files: deploys have no build step, and CI checks they match. `public/die.png` is a still render of the same scene, shown until WebGL is ready.
+- [server.json](server.json): the entry for the official MCP Registry.
+- [chatgpt-plugin/](chatgpt-plugin/): the package for ChatGPT's plugin directory. `npm run plugin:zip` builds `dist/randollm-chatgpt.zip`.
+
+## Directories
+
+[docs/directories.md](docs/directories.md) has what's ready and the steps left for the Claude Connectors Directory, ChatGPT's plugin directory, the official MCP Registry, Glama and Smithery, plus the decisions to make first.
 
 ## Local development
 

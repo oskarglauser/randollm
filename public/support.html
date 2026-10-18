@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support · randollm</title>
+<meta name="description" content="How to get help with randollm: setup for Claude, ChatGPT and other AI tools, service status, and how to report a problem.">
+<link rel="canonical" href="https://randollm.glauser.com/support">
+<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0a0a0b" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="randollm">
+<meta property="og:title" content="Support · randollm">
+<meta property="og:description" content="How to get help with randollm: setup for Claude, ChatGPT and other AI tools, service status, and how to report a problem.">
+<meta property="og:image" content="https://randollm.glauser.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<script defer src="https://appscope.glauser.com/s.js" data-key="pk_mWXcdBLPQYs6EWYOKfpO"></script>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/" aria-label="randollm home">rando<span>llm</span></a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="/#setup">Setup</a>
+      <a href="/#tools">Tools</a>
+      <a href="/#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+<main id="main" class="prose">
+  <div class="wrap">
+    <h1>Support</h1>
+    <p>randollm needs no account and no key, so most problems are about setup.</p>
+
+    <h2>Setting it up</h2>
+    <p>The setup steps for Claude, Claude Code, ChatGPT, Cursor, VS Code and other MCP clients are on the <a href="/#setup">home page</a>. The server URL is <code>https://randollm.glauser.com/mcp</code>, with no authentication.</p>
+
+    <h2>Common problems</h2>
+    <ul>
+      <li><strong>The model makes up a number instead of using randollm.</strong> Check that randollm is turned on for the chat, then ask again, or add a line to your custom instructions: “Whenever you need anything random, use the randollm tools.”</li>
+      <li><strong>“Rate limit exceeded”.</strong> One client sent too many requests in a minute. Wait a minute and try again.</li>
+      <li><strong>The connector can’t connect.</strong> Check the <a href="/health">status endpoint</a>. If it returns <code>{"ok":true}</code>, the service is up and the problem is in the connection settings.</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>To report a bug or ask a question, open an issue on <a href="https://github.com/oskarglauser/randollm/issues">GitHub</a>. Say which AI tool you use and what you asked it.</p>
+    <p>randollm is run by Oskar Glauser. For a security issue, or anything you’d rather not post in public, use the contact details on <a href="https://www.glauser.com/">glauser.com</a>.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>randollm, made by Oskar Glauser</span>
+    <nav aria-label="Footer">
+      <a href="https://www.glauser.com/">glauser.com</a>
+      <a href="https://github.com/oskarglauser/randollm">GitHub</a>
+      <a href="/privacy">Privacy</a>
+      <a href="/terms">Terms</a>
+      <a href="/support">Support</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>

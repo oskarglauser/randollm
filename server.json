@@ -1,0 +1,14 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.glauser/randollm",
+  "title": "randollm",
+  "description": "Real randomness for LLMs: numbers, coin flips, picks, shuffles, weighted choices, dice and UUIDs.",
+  "version": "1.0.0",
+  "websiteUrl": "https://randollm.glauser.com",
+  "repository": { "url": "https://github.com/oskarglauser/randollm", "source": "github" },
+  "icons": [
+    { "src": "https://randollm.glauser.com/icon.png", "mimeType": "image/png", "sizes": ["512x512"] },
+    { "src": "https://randollm.glauser.com/icon.svg", "mimeType": "image/svg+xml", "sizes": ["any"] }
+  ],
+  "remotes": [{ "type": "streamable-http", "url": "https://randollm.glauser.com/mcp" }]
+}

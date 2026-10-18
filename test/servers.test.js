@@ -15,10 +15,13 @@ async function checkClient(client) {
   assert.match(int.description, /never invent/);
   assert.equal(int.annotations.readOnlyHint, true);
   assert.equal(int.annotations.destructiveHint, false);
+  assert.equal(int.annotations.openWorldHint, false);
+  assert.equal(int._meta["openai/toolInvocation/invoking"], "Picking a number…");
   assert.match(client.getInstructions(), /instead of choosing yourself/);
 
   const res = await client.callTool({ name: "int", arguments: { min: 1, max: 10 } });
   const body = JSON.parse(res.content[0].text);
+  assert.deepEqual(res.structuredContent, body);
   assert.equal(body.op, "int");
   assert.ok(body.result >= 1 && body.result <= 10);
   assert.equal(body.source, "system");
@@ -62,7 +65,12 @@ test("Worker: remote MCP over Streamable HTTP", async () => {
   try {
     const receipt = await checkClient(client);
     assert.ok(receipt.signature, "results are signed when a secret is set");
-    assert.equal(client.getServerVersion().websiteUrl, "https://randollm.example");
+    const info = client.getServerVersion();
+    assert.equal(info.websiteUrl, "https://randollm.example");
+    assert.deepEqual(
+      info.icons.map((i) => i.src),
+      ["https://randollm.example/icon.png", "https://randollm.example/icon.svg"],
+    );
   } finally {
     await client.close();
   }
