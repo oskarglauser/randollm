@@ -17,6 +17,7 @@
 <meta property="og:description" content="What randollm processes when you or your AI tool call it, and what it keeps: no accounts, no cookies, no stored requests.">
 <meta property="og:image" content="https://randollm.glauser.com/og.png">
 <meta name="twitter:card" content="summary_large_image">
+<script defer src="https://appscope.glauser.com/s.js" data-key="pk_mWXcdBLPQYs6EWYOKfpO"></script>
 </head>
 <body>
 <header class="site-header">
@@ -47,7 +48,7 @@
     <p>To see how randollm is used, it counts each tool call anonymously: which tool, whether it came through MCP, the API or this website, the name your AI app or API client reports about itself (for example its app name and version), and the country Cloudflare sees the request coming from. <strong>No IP addresses and no inputs or results are counted.</strong> These counts are kept in Cloudflare Workers Analytics Engine for up to three months.</p>
 
     <h2>This website</h2>
-    <p>This site uses Cloudflare Web Analytics, which counts page views without cookies and without tracking you across sites. The demos on the home page call the same API described above.</p>
+    <p>This site uses Cloudflare Web Analytics and Appscope, an analytics tool run by Oskar Glauser. Both count page views without cookies and without tracking you across sites. Appscope also counts a few actions on this site (copying the MCP address, choosing a setup tab, rolling the die) and, from the service itself, each MCP connection and tool call: the tool, whether it came through MCP or the API, and the name your AI app reports. <strong>Appscope stores no IP addresses, no browser details and no visitor identifiers.</strong> The demos on the home page call the same API described above.</p>
 
     <h2>Signed receipts</h2>
     <p>Results can include a signature so that anyone can check a result wasn’t changed later. The signature is computed from the result itself. Nothing is stored to make this work.</p>

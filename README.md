@@ -98,6 +98,20 @@ npm run usage
 
 This prints the last 7 days (`npm run usage -- 30` for 30). It uses your Wrangler login (`npx wrangler login`), so there's nothing to set up. To use an API token instead, set `CLOUDFLARE_API_TOKEN` (with **Account Analytics: Read**) and `CLOUDFLARE_ACCOUNT_ID` in `.env`. Request totals and errors are also on the Worker's **Metrics** tab in Cloudflare, and the last 3 days of requests are under **Logs**.
 
+### Appscope
+
+Product analytics go to [Appscope](https://appscope.glauser.com). The script in each page's `<head>` records page views. These events are sent too:
+
+| Event | Sent from | When |
+| --- | --- | --- |
+| `mcp_url_copied` | page (`public/index.html`) | The hero's Copy URL button worked |
+| `setup_viewed` `{app}` | page (`public/index.html`) | A setup tab was clicked (claude, chatgpt, claude code, cursor, vs code, other) |
+| `die_rolled` `{value}` | page (`site/die.js`) | The 3D die landed on a real roll |
+| `mcp_connected` `{client}` | Worker (`src/usage.js`) | An MCP client connected (its reported name, like `claude-ai`) |
+| `tool_called` `{tool, channel}` | Worker (`src/usage.js`) | A tool ran over `mcp` or `api`. The landing page's own demos are left out |
+
+Server events need the Worker secret `APPSCOPE_SECRET_KEY` (`npx wrangler secret put APPSCOPE_SECRET_KEY`). Without it they aren't sent. They go out after the response (`ctx.waitUntil`), so Appscope being slow or down never affects a request.
+
 ## Limits and cost
 
 - **Static files are free and unlimited.** Only `/mcp`, `/api/*` and `/health` run the Worker (`run_worker_first`), so page views don't use the request quota. The demos on the home page make one API request each.
