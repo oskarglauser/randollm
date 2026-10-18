@@ -41,6 +41,7 @@ All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `open
 - [src/worker.js](src/worker.js): the Cloudflare Worker (`/mcp`, `/api/*`, `/health`).
 - [src/mcp.js](src/mcp.js): a local stdio MCP server with the same tools.
 - [public/](public/): the landing page, privacy page, 404, `llms.txt`, `robots.txt`, sitemap, and the share image and icons.
+- [site/die.js](site/die.js): the 3D die on the landing page (three.js). Tapping it rolls a real `/api/dice` result. Run `npm run build:site` to bundle it into `public/assets/die.js`, and commit both files: deploys have no build step, and CI checks they match. `public/die.png` is a still render of the same scene, shown until WebGL is ready.
 
 ## Local development
 

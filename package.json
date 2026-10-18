@@ -4,6 +4,7 @@
   "description": "Real randomness for LLMs: a remote MCP server, REST API and landing page on Cloudflare Workers",
   "scripts": {
     "dev": "wrangler dev --port 3002",
+    "build:site": "esbuild site/die.js --bundle --minify --format=esm --target=es2022 --outfile=public/assets/die.js --log-level=warning",
     "deploy": "wrangler deploy",
     "mcp": "node src/mcp.js",
     "test": "node --test"
@@ -24,6 +25,8 @@
     "node": ">=24"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1",
     "wrangler": "^4.151.1"
   },
   "private": true
