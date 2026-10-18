@@ -68,16 +68,22 @@ Needs a Pro, Max, Team or Enterprise plan.
    - Support contact: decision 1.
    - Icon: `public/icon.png`.
    - The slug can't be changed after publishing.
-5. **Use cases:** at least three example prompts. Use the five positive test
+5. **Data handling:** randollm receives only each tool's inputs (a range,
+   a list of options) and stores no inputs or results. It counts tool calls
+   anonymously (tool, channel, the client's reported name, country; no IP
+   addresses), kept up to three months in Workers Analytics Engine.
+   Cloudflare keeps operational logs for up to 7 days. No conversation data,
+   no accounts, no cookies.
+6. **Use cases:** at least three example prompts. Use the five positive test
    cases in `chatgpt-plugin/plugin.json`. Nothing is needed before
    connecting. The connector reads only (it doesn't write data).
-6. **Company:** Oskar Glauser, `https://www.glauser.com/`, and a primary contact for review emails.
-7. **Test & launch:** run every tool once through the custom connector in
+7. **Company:** Oskar Glauser, `https://www.glauser.com/`, and a primary contact for review emails.
+8. **Test & launch:** run every tool once through the custom connector in
    Claude (or MCP Inspector) and confirm. There's no test account: say "no
    authentication; connect by URL".
-8. **Compliance:** the seven acknowledgments. randollm moves no money,
+9. **Compliance:** the seven acknowledgments. randollm moves no money,
    generates no media and collects no conversation data.
-9. Submit. After approval, press **Publish**. Questions go to
+10. Submit. After approval, press **Publish**. Questions go to
    mcp-review@anthropic.com.
 
 If a WAF rule is ever added in front of `/mcp`, allow Anthropic's range `160.79.104.0/21`.
