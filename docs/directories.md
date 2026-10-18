@@ -4,24 +4,29 @@ What's ready, what's left to do by hand, and the decisions that come first.
 Requirements were checked against the official docs on 2026-10-18; they
 change often, so re-read the linked page before each submission.
 
-## Decisions first
+## Decisions
 
-1. **Support contact.** The support page sends bugs and questions to
-   GitHub issues, and security or private matters to the contact details on
-   glauser.com. The Claude form also has a "support contact" field, and
-   OpenAI and Anthropic email review results to the account's address.
-   Choose the address to give them: a dedicated one (for example
-   `randollm@glauser.com` forwarded through Cloudflare Email Routing) or
-   your existing one. If it's a new address, add it to `public/support.html`.
-2. **Registry name.** `server.json` uses `com.glauser/randollm`, proven
-   with a DNS TXT record on glauser.com. It matches the server's domain and
-   needs no public repo. The alternative is `io.github.oskarglauser/randollm`
-   (GitHub login). Pick one: a URL can belong to only one registry name.
-3. **ChatGPT category.** `chatgpt-plugin/plugin.json` says `Productivity`.
-   Other fits: `Developer Tools`, `Entertainment`, `Other`.
-4. **Terms.** `public/terms.html` is a short as-is, no-warranty text written
-   for the ChatGPT requirement. Read it before submitting; it names no
-   governing law.
+Decided on 2026-10-18:
+
+1. **Support contact: `oskar@glauser.com`**, your existing mailbox, for
+   now. A dedicated address can come later as a Loopia alias. Not Cloudflare
+   Email Routing: glauser.com's mail is hosted at Loopia, and Email Routing
+   would have to take over the domain's MX records, even for a subdomain.
+   Bugs and questions go to GitHub issues, security reports to GitHub's
+   private vulnerability reporting (`public/support.html`,
+   `.github/SECURITY.md`).
+2. **ChatGPT category: Productivity.** People use it for everyday
+   decisions (picks, draws, turn order). `Entertainment` would invite the
+   gambling question in review, and `Developer Tools` hides it from the
+   people who use it.
+3. **Terms: no governing law.** `public/terms.html` stays a short as-is,
+   no-warranty text.
+
+4. **Registry name: `com.glauser/randollm`** (already in `server.json`),
+   proven with a DNS TXT record on glauser.com. It matches the server's
+   domain. A URL can belong to only one registry name, so it stays this.
+
+Nothing is left open.
 
 ## What's in place
 
@@ -65,7 +70,7 @@ Needs a Pro, Max, Team or Enterprise plan.
    - Categories: 1–5.
    - Documentation: `https://randollm.glauser.com/#setup`.
    - Privacy: `https://randollm.glauser.com/privacy`.
-   - Support contact: decision 1.
+   - Support contact: `oskar@glauser.com`.
    - Icon: `public/icon.png`.
    - The slug can't be changed after publishing.
 5. **Data handling:** randollm receives only each tool's inputs (a range,
@@ -136,6 +141,28 @@ Risks to address in the review notes:
 - **Gambling:** keep dice and coins framed as games and decisions, not betting.
 - **Screenshots:** don't add any. They're only allowed for plugins with a UI.
 
+### Demo recording (about 60 seconds)
+
+OpenAI's reviewers want to see the real thing: ChatGPT calling randollm,
+on the web and on a phone. Record it yourself; no voice-over needed.
+
+1. **Set up (not recorded):** add randollm in ChatGPT under
+   chatgpt.com/plugins → **+** → **Add custom MCP server**, as on the
+   landing page. Start a new chat.
+2. **Web, about 40 s** (macOS: Cmd+Shift+5 → Record Selected Portion,
+   around the ChatGPT window):
+   - "Pick a random number from 1 to 10." Show the randollm tool call and
+     its status line ("Picked a number"), then the answer.
+   - "Shuffle the speaking order for standup: Anna, Ben, Cleo, Dev."
+   - "Pick 3 winners from: Ada, Bo, Cy, Di, Eve, Flo." Expand the tool
+     result once so the receipt (result, source, signature) is visible.
+3. **Phone, about 20 s** (iPhone: Control Center → Screen Recording, in
+   the ChatGPT app with the same account): "Flip a coin: do I go out
+   tonight?" Show the tool call and answer.
+4. Trim the two clips, put them one after the other, and upload the result
+   unlisted (YouTube unlisted or a shared Drive/Dropbox link). That URL is
+   `demo_recording_url`.
+
 ## Official MCP Registry
 
 Docs: [quickstart](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx),
@@ -143,7 +170,7 @@ Docs: [quickstart](https://github.com/modelcontextprotocol/registry/blob/main/do
 [remote servers](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/remote-servers.mdx).
 The registry is still in preview. It doesn't check that the URL is reachable.
 
-With the `com.glauser/randollm` name (decision 2):
+With the `com.glauser/randollm` name:
 
 1. Install the CLI with `brew install mcp-publisher`. Install
    `brew install openssl@3` too, because macOS's own openssl can't make
@@ -166,9 +193,6 @@ With the `com.glauser/randollm` name (decision 2):
    ```
 5. Each publish needs a new version, and published versions can't be
    changed. Only `server.json` changed? Use a prerelease such as `1.0.0-1`.
-
-With the GitHub name instead: set `"name": "io.github.oskarglauser/randollm"`
-and run `mcp-publisher login github`.
 
 ## Glama
 
