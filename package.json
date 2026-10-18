@@ -4,12 +4,20 @@
   "description": "Real randomness for LLMs: a remote MCP server, REST API and landing page on Cloudflare Workers",
   "scripts": {
     "dev": "wrangler dev --port 3002",
+    "build:site": "esbuild site/die.js --bundle --minify --format=esm --target=es2022 --outfile=public/assets/die.js --log-level=warning",
     "deploy": "wrangler deploy",
     "mcp": "node src/mcp.js",
-    "test": "node --test",
+    "test": "node --test \"test/*.test.js\"",
     "plugin:zip": "rm -f dist/randollm-chatgpt.zip && mkdir -p dist && cd chatgpt-plugin && zip -rX ../dist/randollm-chatgpt.zip . -x '.*'"
   },
-  "keywords": [],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "llm",
+    "randomness",
+    "random",
+    "cloudflare-workers"
+  ],
   "author": "",
   "license": "MIT",
   "type": "module",
@@ -25,7 +33,17 @@
     "node": ">=24"
   },
   "devDependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.186.1",
     "wrangler": "^4.151.1"
   },
-  "private": true
+  "private": true,
+  "homepage": "https://randollm.glauser.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oskarglauser/randollm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oskarglauser/randollm/issues"
+  }
 }

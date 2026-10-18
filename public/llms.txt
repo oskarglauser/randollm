@@ -4,6 +4,7 @@
 
 - MCP server (Streamable HTTP, no auth): https://randollm.glauser.com/mcp
 - REST API: `GET` or `POST` https://randollm.glauser.com/api/<tool>, e.g. `/api/int?min=1&max=10`
+- Source code (MIT): https://github.com/oskarglauser/randollm
 - Results come from a cryptographically secure generator; ranges use rejection sampling (unbiased). An optional `seed` makes results reproducible and marks them `"source": "seeded"`.
 
 ## Tools

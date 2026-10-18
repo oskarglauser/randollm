@@ -41,6 +41,7 @@ All tools are annotated `readOnlyHint: true`, `destructiveHint: false` and `open
 - [src/worker.js](src/worker.js): the Cloudflare Worker (`/mcp`, `/api/*`, `/health`).
 - [src/mcp.js](src/mcp.js): a local stdio MCP server with the same tools.
 - [public/](public/): the landing page, privacy, terms and support pages, 404, `llms.txt`, `robots.txt`, sitemap, and the share image and icons. `icon.png` (512×512) is rendered from `icon.svg`.
+- [site/die.js](site/die.js): the 3D die on the landing page (three.js). Tapping it rolls a real `/api/dice` result. Run `npm run build:site` to bundle it into `public/assets/die.js`, and commit both files: deploys have no build step, and CI checks they match. `public/die.png` is a still render of the same scene, shown until WebGL is ready.
 - [server.json](server.json): the entry for the official MCP Registry.
 - [chatgpt-plugin/](chatgpt-plugin/): the package for ChatGPT's plugin directory. `npm run plugin:zip` builds `dist/randollm-chatgpt.zip`.
 
@@ -69,14 +70,14 @@ The tests cover the randomness (including a chi-square check), both MCP servers 
 To use the local stdio server from Claude Code:
 
 ```bash
-claude mcp add randollm -- node /Users/oskarglauser/Sites/randollm/src/mcp.js
+claude mcp add randollm -- node "$(pwd)/src/mcp.js"
 ```
 
 ## Deploy
 
 Hosting is a Cloudflare Worker with static assets. Workers Builds deploys every push to `main`, and other branches get a noindex Preview URL.
 
-This is an exception to [INFRA.md](../infra/INFRA.md). It isn't an App, so there's no Dockerfile, Coolify or Postgres, but unlike a static site it runs code. It's stateless (no database, no sessions, nothing stored), so a Worker costs nothing, stays up when the VPS is down and keeps traffic off the VPS.
+It's stateless, so it needs no database, Dockerfile or server of its own.
 
 One-time setup:
 
@@ -93,3 +94,7 @@ One-time setup:
 - **Workers Free plan:** 100,000 Worker requests a day, with no bill. Past the limit, requests fail with error 1027 until midnight UTC.
 - **Rate limits** (`ratelimits` in `wrangler.jsonc`): 60 requests a minute per IP on `/api/*` and 600 on `/mcp`. Claude and ChatGPT call remote MCP servers from shared IP ranges, so the `/mcp` limit is high on purpose. It only stops a single client from hammering the server. The limits are per Cloudflare location and approximate.
 - **CPU:** about 0.1–0.3 ms per MCP request (measured locally), well under the free plan's 10 ms limit.
+
+## License
+
+[MIT](LICENSE)
