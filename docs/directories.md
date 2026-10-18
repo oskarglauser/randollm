@@ -6,23 +6,20 @@ change often, so re-read the linked page before each submission.
 
 ## Decisions first
 
-1. **Support contact.** The support page and privacy policy point to the
-   contact details on glauser.com. The Claude form also has a "support
-   contact" field. Choose what goes there: a dedicated address (for example
+1. **Support contact.** The support page sends bugs and questions to
+   GitHub issues, and security or private matters to the contact details on
+   glauser.com. The Claude form also has a "support contact" field, and
+   OpenAI and Anthropic email review results to the account's address.
+   Choose the address to give them: a dedicated one (for example
    `randollm@glauser.com` forwarded through Cloudflare Email Routing) or
    your existing one. If it's a new address, add it to `public/support.html`.
-2. **Public repo or not.** None of the three directories requires a public
-   repo for a remote server. Making it public adds a `repository` link to
-   the registry entry, lets Glama list it from GitHub, and makes "run it
-   yourself" on the home page true for others. Keeping it private blocks
-   none of the submissions.
-3. **Registry name.** `server.json` uses `com.glauser/randollm`, proven
+2. **Registry name.** `server.json` uses `com.glauser/randollm`, proven
    with a DNS TXT record on glauser.com. It matches the server's domain and
    needs no public repo. The alternative is `io.github.oskarglauser/randollm`
    (GitHub login). Pick one: a URL can belong to only one registry name.
-4. **ChatGPT category.** `chatgpt-plugin/plugin.json` says `Productivity`.
+3. **ChatGPT category.** `chatgpt-plugin/plugin.json` says `Productivity`.
    Other fits: `Developer Tools`, `Entertainment`, `Other`.
-5. **Terms.** `public/terms.html` is a short as-is, no-warranty text written
+4. **Terms.** `public/terms.html` is a short as-is, no-warranty text written
    for the ChatGPT requirement. Read it before submitting; it names no
    governing law.
 
@@ -137,7 +134,7 @@ Docs: [quickstart](https://github.com/modelcontextprotocol/registry/blob/main/do
 [remote servers](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/remote-servers.mdx).
 The registry is still in preview. It doesn't check that the URL is reachable.
 
-With the `com.glauser/randollm` name (decision 3):
+With the `com.glauser/randollm` name (decision 2):
 
 1. Install the CLI with `brew install mcp-publisher`. Install
    `brew install openssl@3` too, because macOS's own openssl can't make
@@ -162,8 +159,7 @@ With the `com.glauser/randollm` name (decision 3):
    changed. Only `server.json` changed? Use a prerelease such as `1.0.0-1`.
 
 With the GitHub name instead: set `"name": "io.github.oskarglauser/randollm"`
-and run `mcp-publisher login github`. If the repo goes public, also add
-`"repository": { "url": "https://github.com/oskarglauser/randollm", "source": "github" }`.
+and run `mcp-publisher login github`.
 
 ## Glama
 
@@ -172,7 +168,10 @@ should get randollm listed with no extra step
 ([FAQ](https://glama.ai/mcp/faq)). To list it sooner, or to claim the
 listing:
 - **Add directly:** https://glama.ai/mcp/connectors → **Add MCP Server →
-  Connector**, with a name, a description and the `/mcp` URL. No repo needed.
+  Connector**, with a name, a description and the `/mcp` URL.
+- **From GitHub:** now that the repo is public, Glama can also list it as
+  an open-source server. Its optional `glama.json` at the repo root lists
+  maintainers by GitHub username.
 - **Claim ownership:** a DNS TXT record at `_glama-claim.glauser.com`, or
   `public/.well-known/glama.json` containing `{"claim": "glama_claim_..."}`
   (JSON, so it's deliberately not in the plain-text rule in `_headers`).

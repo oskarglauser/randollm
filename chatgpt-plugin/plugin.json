@@ -8,6 +8,8 @@
     "url": "https://www.glauser.com/"
   },
   "homepage": "https://randollm.glauser.com/",
+  "repository": "https://github.com/oskarglauser/randollm",
+  "license": "MIT",
   "keywords": [
     "random",
     "randomness",
