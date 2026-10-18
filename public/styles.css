@@ -235,7 +235,7 @@ section {
 }
 @media (min-width: 900px) {
   section {
-    padding: 140px 0;
+    padding: 120px 0;
   }
 }
 .head {
@@ -274,8 +274,14 @@ section {
   transform: scale(0.97);
 }
 .btn.quiet {
-  background: var(--surface-2);
-  color: var(--ink);
+  background: color-mix(in srgb, var(--red) 11%, transparent);
+  color: var(--red);
+  font-weight: 600;
+}
+.btn.quiet:hover {
+  opacity: 1;
+  background: var(--red);
+  color: #fff;
 }
 .btn[disabled] {
   opacity: 0.5;
@@ -311,9 +317,9 @@ section {
 .copy-url {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 16px;
   max-width: 100%;
-  padding: 6px 6px 6px 20px;
+  padding: 6px 6px 6px 26px;
   background: var(--surface);
   border-radius: 999px;
   box-shadow: var(--shadow);
@@ -708,6 +714,9 @@ pre.code .dim {
 .site-footer nav {
   display: flex;
   gap: 20px;
+}
+.site-footer a:hover {
+  color: var(--ink);
 }
 
 .toast {
