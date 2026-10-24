@@ -6,6 +6,7 @@ import { CfWorkerJsonSchemaValidator } from "@modelcontextprotocol/sdk/validatio
 import { createServer } from "./tools.js";
 import { operations, run, verify, RandomError } from "./random.js";
 import { recordApi, recordMcp } from "./usage.js";
+import { reportAgent } from "./appscope.js";
 
 const MAX_BODY = 64 * 1024;
 
@@ -106,20 +107,26 @@ async function handleMcp(request, url, env, ctx) {
 
 export default {
   async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    const { pathname } = url;
-    const isApi = pathname.startsWith("/api/");
-    const isMcp = pathname === "/mcp";
-
-    try {
-      if (request.method === "OPTIONS" && (isApi || isMcp)) return withHeaders(new Response(null, { status: 204 }));
-      if (pathname === "/health") return json(200, { ok: true });
-      if (isMcp) return await handleMcp(request, url, env, ctx);
-      if (isApi) return await handleApi(request, url, env, ctx);
-      return env.ASSETS ? env.ASSETS.fetch(request) : json(404, { error: "not found" });
-    } catch (err) {
-      console.error(err);
-      return json(500, { error: "internal error" });
-    }
+    const response = await route(request, env, ctx);
+    reportAgent(request, response, env, ctx);
+    return response;
   },
 };
+
+async function route(request, env, ctx) {
+  const url = new URL(request.url);
+  const { pathname } = url;
+  const isApi = pathname.startsWith("/api/");
+  const isMcp = pathname === "/mcp";
+
+  try {
+    if (request.method === "OPTIONS" && (isApi || isMcp)) return withHeaders(new Response(null, { status: 204 }));
+    if (pathname === "/health") return json(200, { ok: true });
+    if (isMcp) return await handleMcp(request, url, env, ctx);
+    if (isApi) return await handleApi(request, url, env, ctx);
+    return env.ASSETS ? env.ASSETS.fetch(request) : json(404, { error: "not found" });
+  } catch (err) {
+    console.error(err);
+    return json(500, { error: "internal error" });
+  }
+}

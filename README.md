@@ -110,11 +110,13 @@ Product analytics go to [Appscope](https://appscope.glauser.com). The script in 
 | `mcp_connected` `{client}` | Worker (`src/usage.js`) | An MCP client connected (its reported name, like `claude-ai`) |
 | `tool_called` `{tool, channel}` | Worker (`src/usage.js`) | A tool ran over `mcp` or `api`. The landing page's own demos are left out |
 
+The Worker also reports requests from AI agents to Appscope's `/api/v1/agents` (`reportAgent()` in `src/appscope.js`), after the response.
+
 Server events need the Worker secret `APPSCOPE_SECRET_KEY` (`npx wrangler secret put APPSCOPE_SECRET_KEY`). Without it they aren't sent. They go out after the response (`ctx.waitUntil`), so Appscope being slow or down never affects a request.
 
 ## Limits and cost
 
-- **Static files are free and unlimited.** Only `/mcp`, `/api/*` and `/health` run the Worker (`run_worker_first`), so page views don't use the request quota. The demos on the home page make one API request each.
+- **Every request runs the Worker** (`run_worker_first: true`) so it can report AI agents (ChatGPT-User, GPTBot, ClaudeBot…) to Appscope, which they'd otherwise never show up in: they don't run the page's script. Page views therefore count toward the request quota. The demos on the home page make one API request each.
 - **Workers Free plan:** 100,000 Worker requests a day, with no bill. Past the limit, requests fail with error 1027 until midnight UTC.
 - **Rate limits** (`ratelimits` in `wrangler.jsonc`): 60 requests a minute per IP on `/api/*` and 600 on `/mcp`. Claude and ChatGPT call remote MCP servers from shared IP ranges, so the `/mcp` limit is high on purpose. It only stops a single client from hammering the server. The limits are per Cloudflare location and approximate.
 - **CPU:** about 0.1–0.3 ms per MCP request (measured locally), well under the free plan's 10 ms limit.

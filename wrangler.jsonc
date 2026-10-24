@@ -15,7 +15,8 @@
     "html_handling": "drop-trailing-slash",
     // Only these paths run the Worker. Everything else is a static asset:
     // free, unlimited, and doesn't count toward the daily request limit.
-    "run_worker_first": ["/mcp", "/api/*", "/health"]
+    // Every request runs the Worker so it can report AI agents to Appscope.
+    "run_worker_first": true
   },
   "vars": {
     "APP_URL": "https://randollm.glauser.com"
