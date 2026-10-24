@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
-    "mediabunny": "^1.61.6",
+    "mediabunny": "^1.62.0",
     "three": "^0.186.1",
-    "wrangler": "^4.151.1"
+    "wrangler": "^4.151.3"
   },
   "private": true,
   "homepage": "https://randollm.glauser.com",
