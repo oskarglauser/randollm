@@ -38,7 +38,7 @@
     "esbuild": "^0.28.2",
     "mediabunny": "^1.61.6",
     "three": "^0.186.1",
-    "wrangler": "^4.151.1"
+    "wrangler": "^4.156.0"
   },
   "private": true,
   "homepage": "https://randollm.glauser.com",
