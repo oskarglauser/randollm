@@ -24,8 +24,8 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "@cfworker/json-schema": "^4.1.1",
-    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@cfworker/json-schema": "^4.1.6",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "zod": "^4.6.7"
   },
   "bin": {
@@ -36,9 +36,9 @@
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
-    "mediabunny": "^1.61.6",
-    "three": "^0.186.1",
-    "wrangler": "^4.151.1"
+    "mediabunny": "^1.65.1",
+    "three": "^0.187.0",
+    "wrangler": "^4.157.0"
   },
   "private": true,
   "homepage": "https://randollm.glauser.com",
